@@ -40,7 +40,6 @@ type SelectProps = FieldProps<
     labelProps?: object;
     required?: boolean;
     transform?(value: string): string;
-    textFieldProps: TextFieldProps;
   }
 >;
 
@@ -80,7 +79,7 @@ function Select(props: SelectFieldProps) {
           name={name}
           onChange={event => disabled || onChange(event.target.value)}
           ref={inputRef}
-          value={value ?? ''}
+          value={value}
         >
           {allowedValues!.map(item => (
             <FormControlLabel
@@ -115,10 +114,7 @@ function Select(props: SelectFieldProps) {
         </FormGroup>
       );
     return wrapField(
-      {
-        ...props,
-        component: 'fieldset',
-      },
+      { ...props, component: 'fieldset' },
       (legend || label) && (
         <FormLabel component="legend">{legend || label}</FormLabel>
       ),
@@ -147,7 +143,6 @@ function Select(props: SelectFieldProps) {
     showInlineError,
     transform,
     variant,
-    textFieldProps,
   } = props;
   const Item = native ? 'option' : MenuItem;
   const hasPlaceholder = !!placeholder;
@@ -155,6 +150,7 @@ function Select(props: SelectFieldProps) {
 
   return (
     <TextField
+      {...filterDOMProps(props)}
       disabled={disabled}
       error={!!error}
       fullWidth={fullWidth}
@@ -182,7 +178,6 @@ function Select(props: SelectFieldProps) {
       }}
       value={native && !value ? '' : value}
       variant={variant}
-      {...textFieldProps}
     >
       {(hasPlaceholder || !required || !hasValue) && (
         <Item value="" disabled={!!required}>
